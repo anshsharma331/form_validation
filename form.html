@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation Project</title>
+    <style>
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="email"], input[type="tel"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.8em;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Form Validation Project</h2>
+        <form id="validationForm">
+            <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" name="fullName" required>
+                <span id="fullNameError" class="error"></span>
+            </div>
+            <div class="form-group">
+                <label for="email">Email ID:</label>
+                <input type="email" id="email" name="email" required>
+                <span id="emailError" class="error"></span>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" required>
+                <span id="phoneNumberError" class="error"></span>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <span id="passwordError" class="error"></span>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <span id="confirmPasswordError" class="error"></span>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('validationForm');
+            const fullNameInput = document.getElementById('fullName');
+            const emailInput = document.getElementById('email');
+            const phoneNumberInput = document.getElementById('phoneNumber');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const fullNameError = document.getElementById('fullNameError');
+            const emailError = document.getElementById('emailError');
+            const phoneNumberError = document.getElementById('phoneNumberError');
+            const passwordError = document.getElementById('passwordError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent form submission
+
+                // Validate Full Name
+                if (!validateFullName(fullNameInput.value.trim())) {
+                    fullNameError.textContent = 'Full Name must be at least 5 characters';
+                    return;
+                } else {
+                    fullNameError.textContent = '';
+                }
+
+                // Validate Email
+                if (!validateEmail(emailInput.value.trim())) {
+                    emailError.textContent = 'Please enter a valid email address';
+                    return;
+                } else {
+                    emailError.textContent = '';
+                }
+
+                // Validate Phone Number
+                if (!validatePhoneNumber(phoneNumberInput.value.trim())) {
+                    phoneNumberError.textContent = 'Please enter a valid 10-digit phone number';
+                    return;
+                } else {
+                    phoneNumberError.textContent = '';
+                }
+
+                // Validate Password
+                if (!validatePassword(passwordInput.value.trim())) {
+                    passwordError.textContent = 'Password must be at least 8 characters long, not "password", and cannot be your Full Name';
+                    return;
+                } else {
+                    passwordError.textContent = '';
+                }
+
+                // Validate Confirm Password
+                if (passwordInput.value.trim() !== confirmPasswordInput.value.trim()) {
+                    confirmPasswordError.textContent = 'Passwords do not match';
+                    return;
+                } else {
+                    confirmPasswordError.textContent = '';
+                }
+
+                // If all validations pass, you can proceed with form submission
+                alert('Form submitted successfully!');
+                form.reset(); // Optional: Reset the form after successful submission
+            });
+
+            // Function to validate Full Name (minimum length)
+            function validateFullName(fullName) {
+                return fullName.length >= 5;
+            }
+
+            // Function to validate Email format using regular expression
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+
+            // Function to validate Phone Number (10-digit number)
+            function validatePhoneNumber(phoneNumber) {
+                const re = /^[0-9]{10}$/;
+                return re.test(phoneNumber) && phoneNumber !== '1234567890';
+            }
+
+            // Function to validate Password (minimum length and not "password")
+            function validatePassword(password) {
+                const fullNameLowerCase = fullNameInput.value.trim().toLowerCase();
+                const passwordLowerCase = password.toLowerCase();
+                
+                return password.length >= 8 
+                    && passwordLowerCase !== 'password' 
+                    && passwordLowerCase !== fullNameLowerCase
+                    && !passwordLowerCase.includes(fullNameLowerCase);
+            }
+        });
+    </script>
+</body>
+</html>
